@@ -1,0 +1,14 @@
+[profile.default]
+src = "src"
+out = "out"
+libs = ["lib"]
+solc_version = "0.8.24"
+optimizer = true
+optimizer_runs = 200
+via_ir = true
+
+[rpc_endpoints]
+ritual = "${RITUAL_RPC_URL}"
+
+[etherscan]
+ritual = { key = "unused", url = "${RITUAL_VERIFIER_URL}" }

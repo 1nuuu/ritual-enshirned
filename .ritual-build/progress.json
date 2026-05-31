@@ -1,0 +1,188 @@
+{
+  "intent": "build",
+  "features": [
+    "soulbound badge ERC-5192",
+    "gacha rarity roll",
+    "ERC-721 enumerable cards",
+    "tx count signed attestation",
+    "Next.js frontend",
+    "Ritual Chain deployment"
+  ],
+  "current_phase": 2,
+  "phases": [
+    {
+      "name": "PHASE 0 - Read First",
+      "status": "completed",
+      "notes": [
+        "Repo-local skills/ritual/SKILL.md was not present; canonical Ritual skill was read from C:/Users/ibnub/.codex/skills/ritual-dapp-skills/skills/ritual/SKILL.md.",
+        "Current Ritual skill states: DO NOT USE INFERNET; Infernet is deprecated and replaced by enshrined precompiles.",
+        "No Infernet SDK package, job type format, or CallbackConsumer interface is provided by the current Ritual skill.",
+        "Implementation will not add an Infernet SDK package or CallbackConsumer inheritance. Tx-count verification remains a signed proof boundary so it can be wired to the current Ritual-approved attestation path.",
+        "Deployment completed on Ritual Chain after real CardNFT image URIs were added."
+      ]
+    },
+    {
+      "name": "PHASE 1 - Contracts",
+      "status": "completed",
+      "notes": [
+        "CardNFT.sol, BadgeContract.sol, GachaContract.sol, and EnshrionedConsumer.sol written.",
+        "Foundry project compiled successfully with C:/Users/ibnub/.foundry/bin/forge.exe build.",
+        "Unit tests passed: 13 tests across BadgeContract, GachaContract, and CardNFT.",
+        "Ritual RPC chain-id check returned 1979.",
+        "Deploy.s.sol broadcast to Ritual Chain succeeded.",
+        "Deployed BadgeContract: 0xe92De90C26ECa062EA9273fD7c04903803244FA3.",
+        "Deployed GachaContract: 0xD4A7E3989b3C171cA318B794f57Bf123163A8dB3.",
+        "Deployed CardNFT: 0x5F9f1df9594917a94A1367b87668aae1f2315377.",
+        "Deployed EnshrionedConsumer: 0x965d9D266fe69548B30037e1123430D14E5FeFB2.",
+        "ABIs and env-backed contract address constants copied to frontend/lib/contracts.ts."
+      ]
+    },
+    {
+      "name": "PHASE 2 - Frontend Foundation",
+      "status": "completed",
+      "notes": [
+        "Next.js 14 App Router app created under frontend/.",
+        "Installed RainbowKit, wagmi v2, viem, TanStack Query v5, Zustand, Sonner, Framer Motion, Tailwind CSS.",
+        "globals.css uses the requested design tokens and Google font variables.",
+        "layout.tsx wires RainbowKit, wagmi, TanStack Query, and app frame.",
+        "lib/wagmi.ts, lib/tiers.ts, and lib/store.ts created."
+      ]
+    },
+    {
+      "name": "PHASE 3 - Shared Components",
+      "status": "completed",
+      "notes": [
+        "ParticleBackground, CustomCursor, CountUp, IntroScreen, Header, Footer, BadgeShield, CardDisplay, BadgeCeremony, GachaOverlay, and StatsCards created.",
+        "IntroScreen timer adjusted after browser QA found a React Strict Mode dev replay issue."
+      ]
+    },
+    {
+      "name": "PHASE 4 - Hooks",
+      "status": "completed",
+      "notes": [
+        "useBadgeContract, useGachaContract, useCardNFT, and useLeaderboard created.",
+        "All chain reads use TanStack Query. Zustand remains UI-only.",
+        "Badge claim proof flow is env-backed signed tx-count attestation; no deprecated Infernet SDK added."
+      ]
+    },
+    {
+      "name": "PHASE 5 - Pages",
+      "status": "completed",
+      "notes": [
+        "Landing, dashboard, collection, and hall-of-fame pages created.",
+        "Footer hidden on / and present on app routes.",
+        "Stats and collections read from deployed contract logs and contract reads."
+      ]
+    },
+    {
+      "name": "PHASE 6 - Integration & Polish",
+      "status": "completed_with_external_blockers",
+      "notes": [
+        "frontend npm run build passed with transitive wallet optional-dependency warnings.",
+        "frontend npm run typecheck passed.",
+        "Local browser QA verified / and /dashboard render at http://127.0.0.1:3000.",
+        "NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID is set in frontend/.env.local.",
+        "frontend/.env.local contains deployed BadgeContract, GachaContract, CardNFT, and EnshrionedConsumer addresses.",
+        "Local /api/verify-txcount route added for tx-count attestation signing; frontend now defaults to that route instead of an external Infernet endpoint.",
+        "BadgeContract proofSigner rotated on Ritual Chain to the dedicated server-side verifier key stored in frontend/.env.local.",
+        "Gacha/Card/Badge/Leaderboard frontend reads pinned to Ritual Chain public client to avoid zero-data reads on wrong client state.",
+        "GachaOverlay now resumes an existing pending pull before requesting a new pull, preventing stuck reveal retries after a prior partial reveal.",
+        "useRequestPull now checks hasPendingPull/pendingPull on Ritual before opening the wallet, so an existing pending pull cannot trigger a reverting requestPull transaction.",
+        "Contract read hooks now use a dedicated viem Ritual HTTP client instead of wagmi usePublicClient, preventing browser/provider chain drift from returning zero data for deployed Ritual contracts.",
+        "GachaContract pendingPull now stores rarity, cardIndex, and exists; CardNFT mints the exact pending card instead of rolling again.",
+        "Frontend GachaOverlay now reads the confirmed GachaResult event and reveals the exact card selected by the contract.",
+        "Card artwork rendering now uses object-contain in CardDisplay and Hall of Fame legendary cards to avoid artwork cropping.",
+        "Badge claim and card mint fees are forwarded immediately to the contract owner, with withdraw retained as a fallback.",
+        "Frontend dev script now runs next dev --turbo, with scripts/warmup.mjs available to precompile the app routes.",
+        "The pendingPull struct and CardMinted/GachaResult event changes are ABI-breaking and require redeploying the updated contracts before the live frontend can use these env addresses.",
+        "Redeployed updated contracts to Ritual Chain after forge build and 13 Foundry tests passed.",
+        "Latest BadgeContract: 0xfba9cdc539516dCce257474A6e595ECD641f1954.",
+        "Latest GachaContract: 0xD1e598604EdDfB47C11B979EBA953357dC694cAf.",
+        "Latest CardNFT: 0xCb6558b290fdCbf5A1cBd3924641B40A83946B4E.",
+        "Latest EnshrionedConsumer: 0xdCd77EA21ef42BbAeE3357EA5d1496fde6BF6518.",
+        "frontend/.env.local updated to the latest deployed contract addresses.",
+        "Owner verified on-chain for all latest contracts as 0xeAde8866829334754c3796905A257A35BaE8b038.",
+        "Local dev server restarted with npm run dev; http://localhost:3000 returned 200 OK.",
+        "Full connect -> claim -> ceremony -> gacha -> mint -> collection E2E still depends on wallet interaction and the user meeting tier thresholds.",
+        "Debugged badge claim verification endpoint rejection after PROOF_SIGNER rotation.",
+        "frontend/app/api/verify-txcount/route.ts now forces dynamic execution and verifies the server signer address matches BadgeContract.proofSigner() before signing a tx-count proof.",
+        "frontend/hooks/useBadgeContract.ts now uses no-store for proof requests and surfaces the endpoint JSON error instead of masking every non-2xx response.",
+        "frontend/app/dashboard/page.tsx now catches toast-handled claim failures so endpoint rejections do not become unhandled runtime errors.",
+        "Local /api/verify-txcount returned 200 for wallet 0xF38F79Ff56A3725AfC5bDa872c1ecCF56D217C74 and the encoded proof simulated successfully against BadgeContract.claimBadge tier 0.",
+        "frontend npm run typecheck passed after verification fix.",
+        "frontend npm run build passed after verification fix: / 91 kB, /dashboard 219 kB, /collection 212 kB, /hall-of-fame 207 kB.",
+        "Fixed collection card images by adding CardNFT.cardMeta to frontend/lib/contracts.ts and mapping cardMeta ipfsImage directly to OwnedCard.image in frontend/hooks/useCardNFT.ts.",
+        "CardDisplay now warns when card.image is missing and renders artwork with an absolute object-contain image inside a 3/4 rounded bg-black/20 frame.",
+        "GachaOverlay minted phase now uses an overflow-y-auto fixed overlay with a fixed close button, top-start scrollable content, and max-w-xs card/button column.",
+        "frontend npm run typecheck passed after card display fixes.",
+        "frontend npm run build passed after card display fixes: / 91 kB, /dashboard 219 kB, /collection 212 kB, /hall-of-fame 208 kB.",
+        "UI/UX polish pass replaced hall-of-fame/page.tsx with the real leaderboard-driven Hall of Fame page.",
+        "CardDisplay was replaced to remove double aspect-ratio nesting; only the artwork area owns the aspect ratio.",
+        "Header now has active nav states and a mobile hamburger menu.",
+        "Dashboard wallet card, badge grid, and tier heading responsive classes were tightened.",
+        "Collection grid now uses a denser responsive layout and no external Framer wrapper around each CardDisplay.",
+        "GachaOverlay minted phase now centers content with constrained card width and a fixed SVG close button.",
+        "globals.css now includes nav-active, skeleton shimmer, and smooth scrollbar utilities.",
+        "useLeaderboard now returns firstEnshrined/topCollectors aliases for the new Hall page while preserving existing stats fields.",
+        "frontend npm run typecheck passed after UI/UX polish pass.",
+        "frontend npm run build passed after UI/UX polish pass: / 91 kB, /dashboard 219 kB, /collection 212 kB, /hall-of-fame 208 kB.",
+        "Verified deployed CardNFT.cardMeta tuple order is rarity, cardIndex, name, serial, ipfsImage, owner.",
+        "useOwnedCards now normalizes named and tuple cardMeta responses and maps ipfsImage to OwnedCard.image from tuple index 4.",
+        "Verified token 1 maps to the live Pinata image URL for Siggy The Cadet; Pinata returned 200 image/png.",
+        "frontend npm run typecheck passed after collection card image mapping fix.",
+        "frontend npm run build passed after collection card image mapping fix: / 91 kB, /dashboard 219 kB, /collection 212 kB, /hall-of-fame 208 kB.",
+        "Restarted the stale local Next dev process on port 3000; http://localhost:3000/collection returned 200 OK.",
+        "Confirmed viem returns CardNFT.cardMeta as an array tuple in this app, not named object properties; meta.ipfsImage is undefined while meta[4] is the live Pinata URL.",
+        "useOwnedCards now uses explicit typed tuple destructuring for cardMeta and maps tuple ipfsImage directly to card.image.",
+        "useMintCard was verified to map CardMinted args.ipfsImage to OwnedCard.image.",
+        "frontend npm run typecheck and npm run build passed after explicit cardMeta tuple extraction; /collection stayed at 212 kB First Load JS.",
+        "Audited reveal-to-mint-to-collection image flow: existing minted CardNFT metadata for token 1 and token 2 both has non-empty Pinata image URLs.",
+        "Fixed CardDisplay image fallback so image failures are React-controlled and reset on fresh card data instead of imperatively hiding the img DOM node.",
+        "Fixed GachaOverlay minted phase to render the CardMinted event result directly instead of overriding it with local preview CARD_DATA.",
+        "frontend npm run typecheck and npm run build passed after the image display audit fixes.",
+        "useOwnedCards now reads CardNFT.cardMeta via named properties with indexed fallback and cache-busts collection data with query version v3.",
+        "CardDisplay now requires a trimmed http image URL before rendering img and resets image failure state on load or fresh card data.",
+        "frontend npm run typecheck and npm run build passed after the v3 collection image cache-busting fix.",
+        "CardNFT.mintCard now mints before external calls, consumes the pending pull after mint, emits CardMinted, then attempts fee forwarding last without reverting if forwarding fails.",
+        "Deploy.s.sol now deploys BadgeContract, GachaContract, CardNFT, and EnshrionedConsumer directly with OWNER_WALLET and only calls setCardNFT during deploy when owner equals deployer.",
+        "forge build and forge test -vv passed after the contract fixes: 13 tests passed.",
+        "Redeployed contracts to Ritual Chain: BadgeContract 0x6d59c85D41830e75be33Db94dc80BD078Fa9417f, GachaContract 0x80Aae11f82a4cAD612D1084021A5806E1F1ce822, CardNFT 0x3A7EAE0ba639527C3A48F01047a17d3d2686C6Ea, EnshrionedConsumer 0x5D1e5e69782be627f0Cc0e09c4f146453c665495.",
+        "Verified all new contracts owner() return 0xeAde8866829334754c3796905A257A35BaE8b038, BadgeContract.proofSigner() returns 0x81b95d1f693aF09646Be50fdD51C7D901C89338A, and GachaContract.cardNFT() is 0x3A7EAE0ba639527C3A48F01047a17d3d2686C6Ea.",
+        "frontend/.env.local updated to the redeployed contract addresses.",
+        "useOwnedCards now cache-busts collection reads with query version v4 and reads CardNFT.cardMeta via named properties with indexed fallback.",
+        "Live contract-level E2E completed on Ritual Chain with owner wallet: claimed tier 0, requested pull, minted CardNFT token 1 Siggy The Chef, and verified its Pinata image URL.",
+        "frontend npm run typecheck and npm run build passed after redeploy/env update; /, /dashboard, /collection, and /hall-of-fame returned 200 on the restarted dev server."
+      ]
+    }
+  ],
+  "files_read": [
+    "C:/Users/ibnub/.codex/skills/ritual-dapp-skills/skills/ritual/SKILL.md",
+    "C:/Users/ibnub/.codex/skills/ritual-dapp-skills/skills/ritual-meta-projection/SKILL.md",
+    "C:/Users/ibnub/.codex/skills/ritual-dapp-skills/agents/ritual-dapp-builder.md",
+    "C:/Users/ibnub/.codex/skills/ritual-dapp-skills/examples/registry.json",
+    "C:/Users/ibnub/.codex/skills/ritual-dapp-skills/skills/ritual-dapp-overview/SKILL.md",
+    "C:/Users/ibnub/.codex/skills/ritual-dapp-skills/skills/ritual-dapp-precompiles/SKILL.md",
+    "C:/Users/ibnub/.codex/skills/ritual-dapp-skills/skills/ritual-dapp-http/SKILL.md",
+    "C:/Users/ibnub/.codex/skills/ritual-dapp-skills/skills/ritual-dapp-contracts/SKILL.md",
+    "C:/Users/ibnub/.codex/skills/ritual-dapp-skills/skills/ritual-dapp-wallet/SKILL.md",
+    "C:/Users/ibnub/.codex/skills/ritual-dapp-skills/skills/ritual-dapp-frontend/SKILL.md",
+    "C:/Users/ibnub/.codex/skills/ritual-dapp-skills/skills/ritual-dapp-design/SKILL.md",
+    "C:/Users/ibnub/.codex/skills/ritual-dapp-skills/skills/ritual-dapp-deploy/SKILL.md",
+    "C:/Users/ibnub/.codex/skills/ritual-dapp-skills/skills/ritual-dapp-testing/SKILL.md",
+    "C:/Users/ibnub/.codex/skills/ritual-dapp-skills/agents/ritual-dapp-debugger.md",
+    "C:/Users/ibnub/.codex/skills/ritual-dapp-skills/agents/debugger-reference/diagnosis-reference.md",
+    "C:/Users/ibnub/.codex/skills/ritual-dapp-skills/skills/ritual-meta-verification/SKILL.md"
+  ],
+  "next_file": null,
+  "markers": {
+    "chain_connection": true,
+    "wallet_funded": false,
+    "contract_compiled": true,
+    "contract_deployed": true,
+    "precompile_simulated": false,
+    "precompile_settled": false,
+    "frontend_renders": true,
+    "frontend_connects": false,
+    "e2e_complete": false
+  }
+}

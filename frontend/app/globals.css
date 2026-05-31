@@ -1,0 +1,195 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: #0a0a0f;
+  --foreground: #f0ede8;
+
+  --bronze: #a0714f;
+  --silver: #9aa8bc;
+  --emerald: #4ade80;
+  --gold: #f0c060;
+  --mystic: #8b5cf6;
+
+  --gradient-bronze: linear-gradient(135deg, #a0714f 0%, #5c3d1e 100%);
+  --gradient-silver: linear-gradient(135deg, #9aa8bc 0%, #4a5568 100%);
+  --gradient-emerald: linear-gradient(135deg, #4ade80 0%, #166534 100%);
+  --gradient-gold: linear-gradient(135deg, #f0c060 0%, #92560a 100%);
+  --gradient-mystic: linear-gradient(135deg, #8b5cf6 0%, #4c1d95 100%);
+
+  --glow-bronze: 0 0 30px rgba(160, 113, 79, 0.5), 0 0 60px rgba(160, 113, 79, 0.25);
+  --glow-silver: 0 0 30px rgba(154, 168, 188, 0.5), 0 0 60px rgba(154, 168, 188, 0.25);
+  --glow-emerald: 0 0 30px rgba(74, 222, 128, 0.6), 0 0 60px rgba(74, 222, 128, 0.3);
+  --glow-gold: 0 0 30px rgba(240, 192, 96, 0.6), 0 0 60px rgba(240, 192, 96, 0.3);
+  --glow-mystic: 0 0 40px rgba(139, 92, 246, 0.5), 0 0 80px rgba(139, 92, 246, 0.25);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  background: var(--background);
+  color: var(--foreground);
+}
+
+body {
+  min-height: 100vh;
+  margin: 0;
+  overflow-x: hidden;
+  background:
+    radial-gradient(circle at 18% 12%, rgba(139, 92, 246, 0.16), transparent 26rem),
+    radial-gradient(circle at 80% 28%, rgba(240, 192, 96, 0.1), transparent 24rem),
+    var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans), sans-serif;
+  letter-spacing: 0;
+}
+
+button,
+a {
+  -webkit-tap-highlight-color: transparent;
+}
+
+button:focus-visible,
+a:focus-visible,
+input:focus-visible {
+  outline: 2px solid rgba(240, 192, 96, 0.75);
+  outline-offset: 3px;
+}
+
+.text-gold-glow {
+  color: var(--gold);
+  text-shadow: 0 0 24px rgba(240, 192, 96, 0.58), 0 0 80px rgba(240, 192, 96, 0.22);
+}
+
+.glass-panel {
+  border: 1px solid rgba(240, 237, 232, 0.12);
+  background: rgba(18, 18, 28, 0.62);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05), 0 20px 80px rgba(0, 0, 0, 0.28);
+  backdrop-filter: blur(18px);
+}
+
+.gradient-mystic {
+  background: var(--gradient-mystic);
+}
+
+.gradient-gold {
+  background: var(--gradient-gold);
+}
+
+.gradient-bronze {
+  background: var(--gradient-bronze);
+}
+
+.gradient-silver {
+  background: var(--gradient-silver);
+}
+
+.gradient-emerald {
+  background: var(--gradient-emerald);
+}
+
+.gradient-border {
+  position: relative;
+}
+
+.gradient-border::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1px;
+  background: var(--gradient-mystic);
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+}
+
+.aurora {
+  background:
+    radial-gradient(circle at 50% -10%, var(--aurora-start, #1a0a2e), transparent 38rem),
+    radial-gradient(circle at 20% 20%, rgba(139, 92, 246, 0.16), transparent 28rem),
+    linear-gradient(180deg, rgba(10, 10, 15, 0.38), #0a0a0f 62%);
+}
+
+.card-tilt {
+  transform-style: preserve-3d;
+  perspective: 1200px;
+}
+
+.scanline {
+  background: linear-gradient(180deg, transparent, rgba(240, 192, 96, 0.12), transparent);
+}
+
+.nav-active {
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--foreground);
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+.skeleton {
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0.04) 25%,
+    rgba(255, 255, 255, 0.08) 50%,
+    rgba(255, 255, 255, 0.04) 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.12);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.22);
+}
+
+.landing-hero {
+  animation: landing-hero-in 0.8s ease 0.15s both;
+}
+
+@keyframes landing-hero-in {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: 0.001ms !important;
+  }
+}
