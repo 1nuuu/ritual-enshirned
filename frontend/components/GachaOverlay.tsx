@@ -2,7 +2,7 @@
 
 import { AnimatePresence, motion, useAnimationControls } from 'framer-motion';
 import { useRouter } from 'next/navigation';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { toast } from 'sonner';
 import { useAccount } from 'wagmi';
@@ -11,7 +11,6 @@ import { usePendingPull, useRequestPull } from '@/hooks/useGachaContract';
 import type { RarityKey, TierKey } from '@/lib/tiers';
 import { rarityByKey } from '@/lib/tiers';
 import type { OwnedCard } from '@/lib/types';
-import { truncateAddress } from '@/lib/utils';
 import { CardDisplay } from './CardDisplay';
 
 type Phase = 'shuffle' | 'choose' | 'rising' | 'reveal' | 'minted';
@@ -41,6 +40,7 @@ export function GachaOverlay({ tier, onClose }: { tier: TierKey; onClose: () => 
   const [pickedCard, setPickedCard] = useState<{ id: string; name: string; image: string } | null>(null);
   const [mintedCard, setMintedCard] = useState<OwnedCard | null>(null);
   const [busy, setBusy] = useState(false);
+  const cardRef = useRef<HTMLDivElement>(null);
   const pendingPull = usePendingPull(address);
   const requestPull = useRequestPull();
   const mintCard = useMintCard();
@@ -122,38 +122,36 @@ export function GachaOverlay({ tier, onClose }: { tier: TierKey; onClose: () => 
     }
   }
 
-  async function copyCardImage(card: OwnedCard) {
+  async function downloadCardImage(card: OwnedCard) {
     try {
-      const canvas = document.createElement('canvas');
-      canvas.width = 900;
-      canvas.height = 1200;
-      const ctx = canvas.getContext('2d');
-      if (!ctx) throw new Error('Canvas unavailable');
-      const color = rarityByKey(card.rarity).color;
-      const gradient = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
-      gradient.addColorStop(0, color);
-      gradient.addColorStop(1, '#0a0a0f');
-      ctx.fillStyle = gradient;
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
-      ctx.strokeStyle = 'rgba(240,237,232,0.65)';
-      ctx.lineWidth = 5;
-      ctx.strokeRect(36, 36, canvas.width - 72, canvas.height - 72);
-      ctx.fillStyle = '#f0ede8';
-      ctx.textAlign = 'center';
-      ctx.font = '64px serif';
-      ctx.fillText(card.name, canvas.width / 2, 850);
-      ctx.font = '30px sans-serif';
-      ctx.fillText(`${rarityByKey(card.rarity).name} #${card.serial.toString().padStart(4, '0')}`, canvas.width / 2, 910);
-      ctx.font = '24px monospace';
-      ctx.fillText(truncateAddress(card.owner, 5), canvas.width / 2, 960);
-      ctx.font = '160px serif';
-      ctx.fillText('ENSHRINED', canvas.width / 2, 560);
+      if (!cardRef.current) throw new Error('Card element not found');
+
+      const { default: html2canvas } = await import('html2canvas');
+      const canvas = await html2canvas(cardRef.current, {
+        backgroundColor: null,
+        scale: 3,
+        useCORS: true,
+        allowTaint: false,
+        logging: false,
+      });
+
       const blob = await new Promise<Blob | null>((resolve) => canvas.toBlob(resolve, 'image/png'));
-      if (!blob) throw new Error('Copy failed');
-      await navigator.clipboard.write([new ClipboardItem({ 'image/png': blob })]);
-      toast.success('Image copied');
+      if (!blob) throw new Error('Download failed');
+
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `enshrined-${card.name.toLowerCase().replace(/\s+/g, '-')}-${String(card.serial).padStart(4, '0')}.png`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+
+      toast.success('Card downloaded!');
     } catch {
-      toast.error('Copy failed', { description: 'Clipboard access is blocked in this browser.' });
+      toast.error('Download failed', {
+        description: 'Could not capture card image.',
+      });
     }
   }
 
@@ -314,7 +312,7 @@ export function GachaOverlay({ tier, onClose }: { tier: TierKey; onClose: () => 
                   <p className="mt-2 text-sm text-foreground/55">Your card has been enshrined forever on-chain</p>
                 </div>
 
-                <div className="w-full max-w-[15rem] sm:max-w-[16rem]">
+                <div ref={cardRef} className="w-full max-w-[240px] sm:max-w-[280px]">
                   <CardDisplay card={mintedDisplayCard} size="lg" />
                 </div>
 
@@ -342,9 +340,9 @@ export function GachaOverlay({ tier, onClose }: { tier: TierKey; onClose: () => 
                   </button>
                   <button
                     className="rounded-full border border-white/15 bg-white/6 px-5 py-3 text-sm text-foreground transition-colors hover:bg-white/10"
-                    onClick={() => copyCardImage(mintedDisplayCard)}
+                    onClick={() => downloadCardImage(mintedDisplayCard)}
                   >
-                    Copy Image
+                    Download Image
                   </button>
                 </div>
               </div>

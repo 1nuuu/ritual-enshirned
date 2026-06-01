@@ -7,7 +7,7 @@ import {GachaContract} from "../src/GachaContract.sol";
 import {CardNFT} from "../src/CardNFT.sol";
 
 contract CardNFTTest is Test {
-    uint256 internal constant CLAIM_FEE = 0.005 ether;
+    uint256 internal constant CLAIM_FEE = 0.001 ether;
     uint256 internal constant MINT_FEE = 0.005 ether;
 
     BadgeContract internal badge;

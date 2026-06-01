@@ -6,7 +6,7 @@ import {BadgeContract} from "../src/BadgeContract.sol";
 import {GachaContract} from "../src/GachaContract.sol";
 
 contract GachaContractTest is Test {
-    uint256 internal constant CLAIM_FEE = 0.005 ether;
+    uint256 internal constant CLAIM_FEE = 0.001 ether;
 
     BadgeContract internal badge;
     GachaContract internal gacha;
@@ -26,17 +26,16 @@ contract GachaContractTest is Test {
 
     function test_RarityDistributionBoundaries() public view {
         assertEq(gacha.rarityForRoll(0, 0), 0);
-        assertEq(gacha.rarityForRoll(0, 69), 0);
-        assertEq(gacha.rarityForRoll(0, 70), 1);
-        assertEq(gacha.rarityForRoll(1, 39), 0);
-        assertEq(gacha.rarityForRoll(1, 40), 1);
-        assertEq(gacha.rarityForRoll(1, 84), 1);
-        assertEq(gacha.rarityForRoll(1, 85), 2);
-        assertEq(gacha.rarityForRoll(2, 39), 1);
-        assertEq(gacha.rarityForRoll(2, 40), 2);
-        assertEq(gacha.rarityForRoll(2, 85), 3);
-        assertEq(gacha.rarityForRoll(3, 29), 2);
-        assertEq(gacha.rarityForRoll(3, 30), 3);
+        assertEq(gacha.rarityForRoll(0, 94), 0);
+        assertEq(gacha.rarityForRoll(0, 95), 1);
+        assertEq(gacha.rarityForRoll(1, 0), 1);
+        assertEq(gacha.rarityForRoll(1, 89), 1);
+        assertEq(gacha.rarityForRoll(1, 90), 2);
+        assertEq(gacha.rarityForRoll(2, 0), 2);
+        assertEq(gacha.rarityForRoll(2, 96), 2);
+        assertEq(gacha.rarityForRoll(2, 97), 3);
+        assertEq(gacha.rarityForRoll(3, 14), 2);
+        assertEq(gacha.rarityForRoll(3, 15), 3);
     }
 
     function test_RequestPull_RequiresBadge() public {

@@ -115,7 +115,7 @@ export function useClaimBadge() {
         abi: BADGE_ABI,
         functionName: 'claimBadge',
         args: [tier, proof],
-        value: parseEther('0.005'),
+        value: parseEther('0.001'),
         chainId: ritualChain.id,
         account: address,
       });

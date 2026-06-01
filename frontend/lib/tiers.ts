@@ -65,6 +65,13 @@ export const RARITIES = [
   { key: 3 as const, name: 'Legendary', color: '#f0c060', gradient: 'var(--gradient-gold)' },
 ];
 
+export const POOLS = {
+  initiate: { common: 95, rare: 5, epic: 0, legendary: 0 },
+  ascendant: { common: 0, rare: 90, epic: 10, legendary: 0 },
+  ritualist: { common: 0, rare: 0, epic: 97, legendary: 3 },
+  radiant: { common: 0, rare: 0, epic: 15, legendary: 85 },
+} as const;
+
 export const CARD_DATA = {
   common: [
     {

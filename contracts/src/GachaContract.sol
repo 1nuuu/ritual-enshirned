@@ -88,19 +88,22 @@ contract GachaContract is Ownable {
         if (tier > 3) revert InvalidTier();
         uint256 r = roll % 100;
 
+        // Initiate: Common 95%, Rare 5%
         if (tier == 0) {
-            return r < 70 ? 0 : 1;
+            return r < 95 ? 0 : 1;
         }
+
+        // Ascendant: Rare 90%, Epic 10%
         if (tier == 1) {
-            if (r < 40) return 0;
-            if (r < 85) return 1;
-            return 2;
+            return r < 90 ? 1 : 2;
         }
+
+        // Ritualist: Epic 97%, Legendary 3%
         if (tier == 2) {
-            if (r < 40) return 1;
-            if (r < 85) return 2;
-            return 3;
+            return r < 97 ? 2 : 3;
         }
-        return r < 30 ? 2 : 3;
+
+        // Radiant: Epic 15%, Legendary 85%
+        return r < 15 ? 2 : 3;
     }
 }

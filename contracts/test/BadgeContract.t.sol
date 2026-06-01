@@ -5,7 +5,7 @@ import {Test} from "forge-std/Test.sol";
 import {BadgeContract} from "../src/BadgeContract.sol";
 
 contract BadgeContractTest is Test {
-    uint256 internal constant CLAIM_FEE = 0.005 ether;
+    uint256 internal constant CLAIM_FEE = 0.001 ether;
 
     BadgeContract internal badge;
     uint256 internal signerKey = 0xA11CE;

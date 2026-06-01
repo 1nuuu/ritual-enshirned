@@ -31,7 +31,7 @@ contract BadgeContract is ERC721, Ownable, EIP712, ReentrancyGuard {
     event Locked(uint256 tokenId);
     event ProofSignerUpdated(address indexed signer);
 
-    uint256 public constant CLAIM_FEE = 0.005 ether;
+    uint256 public constant CLAIM_FEE = 0.001 ether;
     uint256 public constant PROOF_VALIDITY = 1 days;
     uint256[4] public THRESHOLDS = [uint256(5), uint256(10), uint256(20), uint256(30)];
 

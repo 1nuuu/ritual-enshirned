@@ -27,6 +27,10 @@ const ParticleBackground = dynamic(
   () => import('@/components/ParticleBackground').then((mod) => ({ default: mod.ParticleBackground })),
   { ssr: false },
 );
+const PullDestinyOverlay = dynamic(
+  () => import('@/components/PullDestinyOverlay').then((mod) => ({ default: mod.PullDestinyOverlay })),
+  { ssr: false },
+);
 const StatsCardsLoader = dynamic(
   () => import('@/components/StatsCardsLoader').then((mod) => ({ default: mod.StatsCardsLoader })),
   {
@@ -55,6 +59,7 @@ export default function DashboardPage() {
   const pendingPullTier = useUIStore((state) => state.pendingPullTier);
   const setPendingPullTier = useUIStore((state) => state.setPendingPullTier);
   const [ceremonyTier, setCeremonyTier] = useState<TierKey | null>(null);
+  const [justClaimedTier, setJustClaimedTier] = useState<TierKey | null>(null);
   const [pullReady, setPullReady] = useState(false);
   const [showGacha, setShowGacha] = useState(false);
   const [claimingTier, setClaimingTier] = useState<TierKey | null>(null);
@@ -72,7 +77,7 @@ export default function DashboardPage() {
   const ownedCardCount = ownedCardCountQuery.data;
   const hasUnmintedBadgePull = !hasRecoverablePull && claimed.length > 0 && ownedCardCount !== undefined && claimed.length > ownedCardCount;
   const recoveredClaimTier = claimed.length ? claimed[claimed.length - 1] : null;
-  const gachaTier = pendingPullTier ?? recoveredClaimTier ?? activeTier ?? 0;
+  const gachaTier = justClaimedTier ?? pendingPullTier ?? recoveredClaimTier ?? activeTier ?? 0;
   const upcoming = nextTier(txCount);
   const progressMax = upcoming?.threshold ?? TIERS[TIERS.length - 1].threshold;
   const progressPct = Math.min(100, Math.round((txCount / progressMax) * 100));
@@ -83,6 +88,7 @@ export default function DashboardPage() {
     setClaimingTier(tier);
     try {
       await claimBadge.claim(tier);
+      setJustClaimedTier(tier);
       setCeremonyTier(tier);
     } catch {
       // useClaimBadge already maps the failure to a toast.
@@ -163,7 +169,7 @@ export default function DashboardPage() {
                         disabled={!eligible || isClaimed || claimingTier !== null}
                         onClick={() => claim(tier.key)}
                       >
-                        {isClaimed ? 'Claimed' : claimingTier === tier.key ? 'Claiming...' : 'Claim Badge (0.005 RITUAL)'}
+                        {isClaimed ? 'Claimed' : claimingTier === tier.key ? 'Claiming...' : 'Claim Badge (0.001 RITUAL)'}
                       </m.button>
                     </div>
                   );
@@ -183,27 +189,56 @@ export default function DashboardPage() {
               )}
             </AnimatePresence>
 
-            {((pullReady && pendingPullTier !== null) || hasRecoverablePull || hasUnmintedBadgePull) && (
-              <m.div className="flex justify-center" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}>
+            <AnimatePresence>
+              {pullReady && justClaimedTier !== null && !showGacha && (
+                <PullDestinyOverlay
+                  tier={justClaimedTier}
+                  onPull={() => {
+                    setPullReady(false);
+                    setShowGacha(true);
+                  }}
+                  onDismiss={() => {
+                    setPullReady(false);
+                  }}
+                />
+              )}
+            </AnimatePresence>
+
+            {!pullReady && justClaimedTier !== null && !showGacha && (
+              <m.div className="mt-4 flex justify-center" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
                 <m.button
-                  className="rounded-full gradient-mystic px-8 py-3 font-semibold text-foreground shadow-mystic"
-                  whileHover={{ scale: 1.04 }}
+                  className="rounded-full border border-mystic/40 bg-mystic/10 px-6 py-2.5 text-sm font-medium text-foreground/70 transition-colors hover:bg-mystic/20 hover:text-foreground"
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.97 }}
+                  onClick={() => setPullReady(true)}
+                >
+                  ✨ Pull Your Destiny
+                </m.button>
+              </m.div>
+            )}
+
+            {justClaimedTier === null && (hasRecoverablePull || hasUnmintedBadgePull) && !showGacha && (
+              <m.div className="mt-4 flex justify-center" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+                <m.button
+                  className="rounded-full border border-mystic/40 bg-mystic/10 px-6 py-2.5 text-sm font-medium text-foreground/70 transition-colors hover:bg-mystic/20 hover:text-foreground"
+                  whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.97 }}
                   onClick={() => setShowGacha(true)}
                 >
-                  {hasRecoverablePull ? 'Resume Card Reveal' : 'Pull Your Destiny'}
+                  {hasRecoverablePull ? 'Resume Card Reveal' : '✨ Pull Your Destiny'}
                 </m.button>
               </m.div>
             )}
 
             <AnimatePresence>
-              {showGacha && (pendingPullTier !== null || hasRecoverablePull || hasUnmintedBadgePull) && (
+              {showGacha && (justClaimedTier !== null || pendingPullTier !== null || hasRecoverablePull || hasUnmintedBadgePull) && (
                 <GachaOverlay
                   tier={gachaTier}
                   onClose={() => {
                     setShowGacha(false);
                     setPullReady(false);
                     setPendingPullTier(null);
+                    setJustClaimedTier(null);
                   }}
                 />
               )}
