@@ -20,7 +20,7 @@ contract BadgeContractTest is Test {
     }
 
     function test_ClaimBadge_MintsSoulboundBadge() public {
-        bytes memory proof = _proof(user, 7, 0, block.timestamp);
+        bytes memory proof = _proof(user, 12, 0, block.timestamp);
         uint256 ownerBalanceBefore = owner.balance;
 
         vm.prank(user);
@@ -33,7 +33,7 @@ contract BadgeContractTest is Test {
     }
 
     function test_ClaimBadge_RevertsBelowThreshold() public {
-        bytes memory proof = _proof(user, 4, 0, block.timestamp);
+        bytes memory proof = _proof(user, 9, 0, block.timestamp);
 
         vm.prank(user);
         vm.expectRevert(BadgeContract.ThresholdNotMet.selector);
@@ -41,7 +41,7 @@ contract BadgeContractTest is Test {
     }
 
     function test_ClaimBadge_RevertsDuplicateTier() public {
-        bytes memory proof = _proof(user, 7, 0, block.timestamp);
+        bytes memory proof = _proof(user, 12, 0, block.timestamp);
 
         vm.startPrank(user);
         badge.claimBadge{value: CLAIM_FEE}(0, proof);
@@ -51,9 +51,9 @@ contract BadgeContractTest is Test {
     }
 
     function test_ClaimBadge_RevertsBadSigner() public {
-        bytes32 digest = badge.proofDigest(user, 7, block.timestamp, 0);
+        bytes32 digest = badge.proofDigest(user, 12, block.timestamp, 0);
         (uint8 v, bytes32 r, bytes32 s) = vm.sign(0xBAD, digest);
-        bytes memory proof = abi.encode(user, uint256(7), block.timestamp, abi.encodePacked(r, s, v));
+        bytes memory proof = abi.encode(user, uint256(12), block.timestamp, abi.encodePacked(r, s, v));
 
         vm.prank(user);
         vm.expectRevert(BadgeContract.InvalidProof.selector);
@@ -61,7 +61,7 @@ contract BadgeContractTest is Test {
     }
 
     function test_SoulboundTransferReverts() public {
-        bytes memory proof = _proof(user, 7, 0, block.timestamp);
+        bytes memory proof = _proof(user, 12, 0, block.timestamp);
 
         vm.prank(user);
         badge.claimBadge{value: CLAIM_FEE}(0, proof);

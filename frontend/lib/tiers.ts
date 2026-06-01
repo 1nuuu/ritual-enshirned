@@ -15,7 +15,7 @@ export const TIERS: Array<{
   {
     key: 0,
     name: 'Initiate',
-    threshold: 5,
+    threshold: 10,
     accent: '#a0714f',
     gradientClass: 'gradient-bronze',
     glow: 'var(--glow-bronze)',
@@ -26,7 +26,7 @@ export const TIERS: Array<{
   {
     key: 1,
     name: 'Ascendant',
-    threshold: 10,
+    threshold: 20,
     accent: '#9aa8bc',
     gradientClass: 'gradient-silver',
     glow: 'var(--glow-silver)',
@@ -37,7 +37,7 @@ export const TIERS: Array<{
   {
     key: 2,
     name: 'Ritualist',
-    threshold: 20,
+    threshold: 30,
     accent: '#4ade80',
     gradientClass: 'gradient-emerald',
     glow: 'var(--glow-emerald)',
@@ -48,7 +48,7 @@ export const TIERS: Array<{
   {
     key: 3,
     name: 'Radiant',
-    threshold: 30,
+    threshold: 50,
     accent: '#f0c060',
     gradientClass: 'gradient-gold',
     glow: 'var(--glow-gold)',

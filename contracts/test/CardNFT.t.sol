@@ -38,7 +38,7 @@ contract CardNFTTest is Test {
     }
 
     function test_MintCard_ConsumesPendingPull() public {
-        _claim(user, 3, 40);
+        _claim(user, 3, 55);
 
         vm.prank(user);
         gacha.requestPull(3);
@@ -68,7 +68,7 @@ contract CardNFTTest is Test {
     }
 
     function test_MintCard_RevertsBadFee() public {
-        _claim(user, 0, 7);
+        _claim(user, 0, 12);
         vm.prank(user);
         gacha.requestPull(0);
 

@@ -33,7 +33,7 @@ contract BadgeContract is ERC721, Ownable, EIP712, ReentrancyGuard {
 
     uint256 public constant CLAIM_FEE = 0.001 ether;
     uint256 public constant PROOF_VALIDITY = 1 days;
-    uint256[4] public THRESHOLDS = [uint256(5), uint256(10), uint256(20), uint256(30)];
+    uint256[4] public THRESHOLDS = [uint256(10), uint256(20), uint256(30), uint256(50)];
 
     mapping(address => uint8[]) public claimedTiers;
     mapping(address => BadgeInfo[]) public badgeHistory;

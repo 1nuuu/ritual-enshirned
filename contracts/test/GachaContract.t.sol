@@ -45,7 +45,7 @@ contract GachaContractTest is Test {
     }
 
     function test_RequestPull_SetsPendingRarity() public {
-        _claim(user, 0, 7);
+        _claim(user, 0, 12);
 
         vm.prank(user);
         gacha.requestPull(0);
@@ -58,7 +58,7 @@ contract GachaContractTest is Test {
     }
 
     function test_ConsumePull_OnlyCardNFT() public {
-        _claim(user, 0, 7);
+        _claim(user, 0, 12);
         vm.prank(user);
         gacha.requestPull(0);
 

@@ -15,8 +15,8 @@ export const CONSUMER_CONTRACT_ADDRESS = (
   process.env.NEXT_PUBLIC_CONSUMER_CONTRACT_ADDRESS || ZERO_ADDRESS
 ) as Address;
 
-export const BADGE_DEPLOY_BLOCK = BigInt(26_786_959);
-export const CARD_NFT_DEPLOY_BLOCK = BigInt(26_786_960);
+export const BADGE_DEPLOY_BLOCK = BigInt(27_028_400);
+export const CARD_NFT_DEPLOY_BLOCK = BigInt(27_028_402);
 
 export function isConfiguredAddress(address: Address) {
   return address !== ZERO_ADDRESS;
